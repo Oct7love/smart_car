@@ -10,15 +10,16 @@ typedef struct {
 void led_proc() {
 
 }
-void printf_proc() {
-    printf("hello STM32\r\n");
-}
+// void printf_proc() {
+//     printf("hello STM32\r\n");
+// }
 // 任务调度器数组，存储所有需要调度的任务及其上次执行时间等信息
 static task_t scheduler_task[] =
 {
     // {printf_proc,100,0},
     {led_proc,100,0},
     {key_proc,10,0},
+    {Uart_Task,100,0},
 
 };
 

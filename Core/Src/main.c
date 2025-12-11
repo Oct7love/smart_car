@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "i2c.h"
 #include "tim.h"
 #include "usart.h"
@@ -90,16 +91,17 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_I2C2_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  printf("[SYS] System Start\r\n");
+  // printf("[SYS] System Start\r\n");
 
   OLED_Init();
-  printf("[OLED] Init Done\r\n");
+  // printf("[OLED] Init Done\r\n");
 
   /* OLED 显示测试 */
   OLED_Clear();
@@ -108,17 +110,18 @@ int main(void)
   OLED_ShowString(3, 1, "Test:12345");
   OLED_ShowFloat(4, 1, 3.14, 1, 2);
   OLED_Flush();
-  printf("[OLED] Display Test Done\r\n");
-
+  // printf("[OLED] Display Test Done\r\n");
+  Uart_Init();
   Key_Init();
-  printf("[KEY] Init Done\r\n");
+  // printf("[KEY] Init Done\r\n");
 
   Motor_Init();           // ← 添加
-  printf("[MOTOR] Init Done\r\n");
+  // printf("[MOTOR] Init Done\r\n");
   Encoder_Init();         // ← 添加
-  printf("[ENCODER] Init Done\r\n");
+  // printf("[ENCODER] Init Done\r\n");
 
   scheduler_init();
+Uart_Printf(&huart1,"system init ok\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -126,10 +129,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-      Test_Function();
+
     /* USER CODE BEGIN 3 */
     scheduler_run();
-    HAL_Delay(10);
+    // HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }
@@ -180,91 +183,91 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-typedef enum {
-      TEST_MOTOR_AUTO,     // 电机自动测试（正转-反转-停止循环）
-      TEST_MOTOR_MANUAL,   // 按键手动控制
-      TEST_ENCODER,        // 编码器速度显示
-      TEST_ALL             // 综合测试
-  } TestMode_t;
-
-  static TestMode_t test_mode = TEST_ALL;
-  static uint32_t test_step = 0;
-  static uint32_t last_test_tick = 0;
-
-  void Test_Function(void)
-  {
-      uint32_t now = HAL_GetTick();
-
-      // 每500ms切换测试步骤
-      if (now - last_test_tick >= 500) {
-          last_test_tick = now;
-          test_step++;
-
-          switch(test_step % 8) {
-              case 0:
-                  printf("[TEST] 左电机正转300\r\n");
-                  Motor_Set_Speed(&left_motor, 300);
-                  Motor_Set_Speed(&right_motor, 0);
-                  break;
-              case 1:
-                  printf("[TEST] 左电机反转-300\r\n");
-                  Motor_Set_Speed(&left_motor, -300);
-                  break;
-              case 2:
-                  printf("[TEST] 右电机正转300\r\n");
-                  Motor_Set_Speed(&left_motor, 0);
-                  Motor_Set_Speed(&right_motor, 300);
-                  break;
-              case 3:
-                  printf("[TEST] 右电机反转-300\r\n");
-                  Motor_Set_Speed(&right_motor, -300);
-                  break;
-              case 4:
-                  printf("[TEST] 双电机正转500\r\n");
-                  Motor_Set_Speed(&left_motor, 500);
-                  Motor_Set_Speed(&right_motor, 500);
-                  break;
-              case 5:
-                  printf("[TEST] 停止\r\n");
-                  Motor_Stop(&left_motor);
-                  Motor_Stop(&right_motor);
-                  break;
-              case 6:
-                  printf("[TEST] 刹车\r\n");
-                  Motor_Brake(&left_motor);
-                  Motor_Brake(&right_motor);
-                  break;
-              case 7:
-                  printf("[TEST] ========== 新循环 ==========\r\n");
-                  break;
-          }
-      }
-
-      // 实时打印编码器数据（每100ms）
-      static uint32_t last_print = 0;
-      if (now - last_print >= 100) {
-          last_print = now;
-
-          Encoder_Driver_Update(&left_encoder);
-          Encoder_Driver_Update(&right_encoder);
-
-          printf("[ENC] L:%d(%.1fcm/s)  R:%d(%.1fcm/s)\r\n",
-                 left_encoder.count, left_encoder.speed_cm_s,
-                 right_encoder.count, right_encoder.speed_cm_s);
-
-          // OLED显示
-          OLED_Clear();
-          OLED_ShowString(1, 1, "L:");
-          OLED_ShowSignedNum(1, 3, left_encoder.count, 5);
-          OLED_ShowString(2, 1, "R:");
-          OLED_ShowSignedNum(2, 3, right_encoder.count, 5);
-          OLED_ShowString(3, 1, "LS:");
-          OLED_ShowFloat(3, 4, left_encoder.speed_cm_s, 4, 1);
-          OLED_ShowString(4, 1, "RS:");
-          OLED_ShowFloat(4, 4, right_encoder.speed_cm_s, 4, 1);
-          OLED_Flush();
-      }
-  }
+// typedef enum {
+//       TEST_MOTOR_AUTO,     // 电机自动测试（正转-反转-停止循环）
+//       TEST_MOTOR_MANUAL,   // 按键手动控制
+//       TEST_ENCODER,        // 编码器速度显示
+//       TEST_ALL             // 综合测试
+//   } TestMode_t;
+//
+//   static TestMode_t test_mode = TEST_ALL;
+//   static uint32_t test_step = 0;
+//   static uint32_t last_test_tick = 0;
+//
+//   void Test_Function(void)
+//   {
+//       uint32_t now = HAL_GetTick();
+//
+//       // 每500ms切换测试步骤
+//       if (now - last_test_tick >= 500) {
+//           last_test_tick = now;
+//           test_step++;
+//
+//           switch(test_step % 8) {
+//               case 0:
+//                   printf("[TEST] 左电机正转300\r\n");
+//                   Motor_Set_Speed(&left_motor, 300);
+//                   Motor_Set_Speed(&right_motor, 0);
+//                   break;
+//               case 1:
+//                   printf("[TEST] 左电机反转-300\r\n");
+//                   Motor_Set_Speed(&left_motor, -300);
+//                   break;
+//               case 2:
+//                   printf("[TEST] 右电机正转300\r\n");
+//                   Motor_Set_Speed(&left_motor, 0);
+//                   Motor_Set_Speed(&right_motor, 300);
+//                   break;
+//               case 3:
+//                   printf("[TEST] 右电机反转-300\r\n");
+//                   Motor_Set_Speed(&right_motor, -300);
+//                   break;
+//               case 4:
+//                   printf("[TEST] 双电机正转500\r\n");
+//                   Motor_Set_Speed(&left_motor, 500);
+//                   Motor_Set_Speed(&right_motor, 500);
+//                   break;
+//               case 5:
+//                   printf("[TEST] 停止\r\n");
+//                   Motor_Stop(&left_motor);
+//                   Motor_Stop(&right_motor);
+//                   break;
+//               case 6:
+//                   printf("[TEST] 刹车\r\n");
+//                   Motor_Brake(&left_motor);
+//                   Motor_Brake(&right_motor);
+//                   break;
+//               case 7:
+//                   printf("[TEST] ========== 新循环 ==========\r\n");
+//                   break;
+//           }
+//       }
+//
+//       // 实时打印编码器数据（每100ms）
+//       static uint32_t last_print = 0;
+//       if (now - last_print >= 100) {
+//           last_print = now;
+//
+//           Encoder_Driver_Update(&left_encoder);
+//           Encoder_Driver_Update(&right_encoder);
+//
+//           printf("[ENC] L:%d(%.1fcm/s)  R:%d(%.1fcm/s)\r\n",
+//                  left_encoder.count, left_encoder.speed_cm_s,
+//                  right_encoder.count, right_encoder.speed_cm_s);
+//
+//           // OLED显示
+//           OLED_Clear();
+//           OLED_ShowString(1, 1, "L:");
+//           OLED_ShowSignedNum(1, 3, left_encoder.count, 5);
+//           OLED_ShowString(2, 1, "R:");
+//           OLED_ShowSignedNum(2, 3, right_encoder.count, 5);
+//           OLED_ShowString(3, 1, "LS:");
+//           OLED_ShowFloat(3, 4, left_encoder.speed_cm_s, 4, 1);
+//           OLED_ShowString(4, 1, "RS:");
+//           OLED_ShowFloat(4, 4, right_encoder.speed_cm_s, 4, 1);
+//           OLED_Flush();
+//       }
+//   }
 /* USER CODE END 4 */
 
 /**

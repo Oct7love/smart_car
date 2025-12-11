@@ -49,7 +49,13 @@ add_executable(${CMAKE_PROJECT_NAME}
         APP/sys_function/motor_app.c
         APP/sys_function/motor_app.h
         APP/sys_function/encoder_app.c
-        APP/sys_function/encoder_app.h)
+        APP/sys_function/encoder_app.h
+        APP/ringbuffer/ringbuffer.c
+        APP/ringbuffer/ringbuffer.h
+        APP/driver/uart_driver.c
+        APP/driver/uart_driver.h
+        APP/sys_function/uart_app.c
+        APP/sys_function/uart_app.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
