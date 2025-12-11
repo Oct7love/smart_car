@@ -18,6 +18,7 @@ static task_t scheduler_task[] =
 {
     // {printf_proc,100,0},
     {led_proc,100,0},
+    {key_proc,10,0},
 
 };
 

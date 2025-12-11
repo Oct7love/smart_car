@@ -41,7 +41,15 @@ add_executable(${CMAKE_PROJECT_NAME}
         APP/OLED/oled.c
         APP/OLED/oled.h
         APP/key_app.c
-        APP/key_app.h)
+        APP/key_app.h
+        APP/driver/motor_driver.c
+        APP/driver/motor_driver.h
+        APP/driver/encoder_driver.c
+        APP/driver/encoder_driver.h
+        APP/sys_function/motor_app.c
+        APP/sys_function/motor_app.h
+        APP/sys_function/encoder_app.c
+        APP/sys_function/encoder_app.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

@@ -63,5 +63,5 @@ void Key_Init(void);
 void Key_Scan(void);                            // 周期调用(建议10ms)
 Key_Event_t Key_GetEvent(Key_ID_t id);          // 获取按键事件(获取后自动清除)
 uint8_t Key_IsPressed(Key_ID_t id);             // 实时检测按键是否按下
-
+void key_proc(void);
 #endif //SMART_CAR_KEY_APP_H

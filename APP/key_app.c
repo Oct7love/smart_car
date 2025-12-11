@@ -107,3 +107,15 @@ uint8_t Key_IsPressed(Key_ID_t id)
     if (id >= KEY_NUM_MAX) return 0;
     return Key_ReadPin(id);
 }
+
+void key_proc(void) {
+    Key_Scan();
+    for (uint8_t i = 0; i < KEY_NUM_MAX; i++) {
+        Key_Event_t evt = Key_GetEvent((Key_ID_t)i);
+        if (evt == KEY_EVENT_SHORT_PRESS) {
+            printf("[KEY] ID:%d Short\r\n", i + 1);
+        } else if (evt == KEY_EVENT_LONG_PRESS) {
+            printf("[KEY] ID:%d Long\r\n", i + 1);
+        }
+    }
+}

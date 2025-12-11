@@ -10,7 +10,22 @@
 #include "string.h"
 #include "stdarg.h"
 #include "stdint.h"
+#include "math.h"
+#include "tim.h"
+
 
 #include "scheduler.h"
 #include "key_app.h"
+#include "oled.h"
+#include "oled_font.h"
+
+#include "driver/encoder_driver.h"
+#include "driver/motor_driver.h"
+#include "sys_function/motor_app.h"
+#include "sys_function/encoder_app.h"
+
+
+
+
+
 #endif //SMART_CAR_BSP_SYSTEM_H

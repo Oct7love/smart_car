@@ -61,6 +61,14 @@ void Error_Handler(void);
 #define KEY3_GPIO_Port GPIOE
 #define KEY4_Pin GPIO_PIN_3
 #define KEY4_GPIO_Port GPIOE
+#define BIN1_Pin GPIO_PIN_8
+#define BIN1_GPIO_Port GPIOE
+#define BIN2_Pin GPIO_PIN_10
+#define BIN2_GPIO_Port GPIOE
+#define AIN1_Pin GPIO_PIN_12
+#define AIN1_GPIO_Port GPIOE
+#define AIN2_Pin GPIO_PIN_14
+#define AIN2_GPIO_Port GPIOE
 #define KEY1_Pin GPIO_PIN_0
 #define KEY1_GPIO_Port GPIOE
 #define KEY2_Pin GPIO_PIN_1
